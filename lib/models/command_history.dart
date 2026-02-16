@@ -4,6 +4,7 @@ class CommandHistory {
   final DateTime timestamp;
   final bool success;
   final String? error;
+  final bool isIncoming;
 
   CommandHistory({
     required this.topic,
@@ -11,10 +12,12 @@ class CommandHistory {
     required this.timestamp,
     required this.success,
     this.error,
+    this.isIncoming = false,
   });
 
   @override
   String toString() {
-    return '${timestamp.toLocal().toString().split('.')[0]} - $topic: $message ${success ? '✓' : '✗'}';
+    final direction = isIncoming ? 'IN' : 'OUT';
+    return '${timestamp.toLocal().toString().split('.')[0]} - [$direction] $topic: $message ${success ? '✓' : '✗'}';
   }
 }
