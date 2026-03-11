@@ -8,7 +8,7 @@ class IOSCard extends StatelessWidget {
   final Color? color;
   final bool glassmorphism;
   final VoidCallback? onTap;
-  
+
   const IOSCard({
     super.key,
     required this.child,
@@ -22,7 +22,7 @@ class IOSCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     Widget card = Container(
       margin: margin ?? const EdgeInsets.symmetric(vertical: 8),
       padding: padding ?? const EdgeInsets.all(16),
@@ -31,9 +31,9 @@ class IOSCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: isDark 
-              ? Colors.black.withOpacity(0.4)
-              : Colors.black.withOpacity(0.04),
+            color: isDark
+                ? Colors.black.withOpacity(0.4)
+                : Colors.black.withOpacity(0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -64,10 +64,11 @@ class IOSButton extends StatelessWidget {
   final Color? color;
   final Color? textColor;
   final IconData? icon;
+  final Widget? iconWidget;
   final double iconSize;
   final bool isLoading;
   final bool secondary;
-  
+
   const IOSButton({
     super.key,
     required this.text,
@@ -75,6 +76,7 @@ class IOSButton extends StatelessWidget {
     this.color,
     this.textColor,
     this.icon,
+    this.iconWidget,
     this.iconSize = 20,
     this.isLoading = false,
     this.secondary = false,
@@ -83,7 +85,7 @@ class IOSButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final btnColor = color ?? const Color(0xFF8B7DFF);
-    
+
     if (secondary) {
       return Container(
         height: 50,
@@ -98,32 +100,33 @@ class IOSButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
             child: Center(
               child: isLoading
-                ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation(btnColor),
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (icon != null) ...[
-                        Icon(icon, color: btnColor, size: iconSize),
-                        const SizedBox(width: 8),
-                      ],
-                      Text(
-                        text,
-                        style: TextStyle(
-                          color: btnColor,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: -0.4,
-                        ),
+                  ? SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation(btnColor),
                       ),
-                    ],
-                  ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (iconWidget != null || icon != null) ...[
+                          iconWidget ??
+                              Icon(icon, color: btnColor, size: iconSize),
+                          const SizedBox(width: 8),
+                        ],
+                        Text(
+                          text,
+                          style: TextStyle(
+                            color: btnColor,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ),
         ),
@@ -154,32 +157,37 @@ class IOSButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           child: Center(
             child: isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation(Colors.white),
-                  ),
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (icon != null) ...[
-                      Icon(icon, color: textColor ?? Colors.white, size: iconSize),
-                      const SizedBox(width: 8),
-                    ],
-                    Text(
-                      text,
-                      style: TextStyle(
-                        color: textColor ?? Colors.white,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.4,
-                      ),
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation(Colors.white),
                     ),
-                  ],
-                ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (iconWidget != null || icon != null) ...[
+                        iconWidget ??
+                            Icon(
+                              icon,
+                              color: textColor ?? Colors.white,
+                              size: iconSize,
+                            ),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        text,
+                        style: TextStyle(
+                          color: textColor ?? Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.4,
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
@@ -192,7 +200,7 @@ class IOSStatusBadge extends StatelessWidget {
   final String text;
   final Color color;
   final IconData? icon;
-  
+
   const IOSStatusBadge({
     super.key,
     required this.text,
@@ -241,7 +249,7 @@ class IOSTextField extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
-  
+
   const IOSTextField({
     super.key,
     this.label,
@@ -258,7 +266,7 @@ class IOSTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -298,18 +306,21 @@ class IOSTextField extends StatelessWidget {
                 fontSize: 17,
                 letterSpacing: -0.4,
               ),
-              prefixIcon: prefixIcon != null 
-                ? Icon(prefixIcon, color: isDark ? Colors.white54 : Colors.black54)
-                : null,
-              suffixIcon: suffixIcon != null
-                ? IconButton(
-                    icon: Icon(
-                      suffixIcon,
+              prefixIcon: prefixIcon != null
+                  ? Icon(
+                      prefixIcon,
                       color: isDark ? Colors.white54 : Colors.black54,
-                    ),
-                    onPressed: onSuffixTap,
-                  )
-                : null,
+                    )
+                  : null,
+              suffixIcon: suffixIcon != null
+                  ? IconButton(
+                      icon: Icon(
+                        suffixIcon,
+                        color: isDark ? Colors.white54 : Colors.black54,
+                      ),
+                      onPressed: onSuffixTap,
+                    )
+                  : null,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,

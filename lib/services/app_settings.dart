@@ -31,6 +31,10 @@ class AppSettings extends ChangeNotifier {
   bool _enableErrorNotifications = true;
   bool _enableLearningNotifications = true;
 
+  // Nombre de configurations bracelet sauvegardées
+  int _wristbandConfigsCount = 0;
+  int get wristbandConfigsCount => _wristbandConfigsCount;
+
   ThemeMode get themeMode => _themeMode;
   String get language => _language;
   bool get isDarkMode => _themeMode == ThemeMode.dark;
@@ -65,6 +69,7 @@ class AppSettings extends ChangeNotifier {
     _enableSuccessNotifications = prefs.getBool('enableSuccessNotifications') ?? true;
     _enableErrorNotifications = prefs.getBool('enableErrorNotifications') ?? true;
     _enableLearningNotifications = prefs.getBool('enableLearningNotifications') ?? true;
+    _wristbandConfigsCount = prefs.getInt('wristbandConfigsCount') ?? 0;
     notifyListeners();
   }
 
@@ -159,6 +164,13 @@ class AppSettings extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateWristbandConfigsCount(int count) async {
+    _wristbandConfigsCount = count;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('wristbandConfigsCount', count);
+    notifyListeners();
+  }
+
   // Textes traduits
   Map<String, String> get texts {
     if (_language == 'en') {
@@ -209,7 +221,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'No history',
         'clear_history': 'Clear history',
         'restart_required': 'Please restart the application to apply MQTT changes',
-        'user_mode': 'User Mode',
+        'user_mode': 'Mode Selection',
         'mode_developer': 'Developer',
         'mode_technician': 'Technician',
         'mode_user': 'User',
@@ -324,6 +336,7 @@ class AppSettings extends ChangeNotifier {
         'action_sent_success': 'Action sent!',
         'command_sent': 'Command sent',
         'command_failed': 'Failed',
+        'movement_detected': 'Movement detected',
         'waiting_ir_command': 'Waiting for the IR command...',
         'point_remote_and_press': 'Point the remote toward the base station and press a button',
         'step_of': 'Step',
@@ -395,7 +408,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': '无历史记录',
         'clear_history': '清除历史记录',
         'restart_required': '请重新启动应用程序以应用MQTT更改',
-        'user_mode': '用户模式',
+        'user_mode': '模式选择',
         'mode_developer': '开发者',
         'mode_technician': '技术人员',
         'mode_user': '用户',
@@ -510,6 +523,7 @@ class AppSettings extends ChangeNotifier {
         'action_sent_success': '操作已发送！',
         'command_sent': '命令已发送',
         'command_failed': '失败',
+        'movement_detected': '检测到动作',
         'waiting_ir_command': '等待红外命令...',
         'point_remote_and_press': '指向遥控器向基站，然后按下一个按钮',
         'step_of': '步骤',
@@ -580,7 +594,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'Sin historial',
         'clear_history': 'Borrar historial',
         'restart_required': 'Por favor, reinicie la aplicación para aplicar los cambios de MQTT',
-        'user_mode': 'Modo de usuario',
+        'user_mode': 'Seleccion de modo',
         'mode_developer': 'Desarrollador',
         'mode_technician': 'Técnico',
         'mode_user': 'Usuario',
@@ -695,6 +709,7 @@ class AppSettings extends ChangeNotifier {
         'action_sent_success': '¡Acción enviada!',
         'command_sent': 'Comando enviado',
         'command_failed': 'Fallido',
+        'movement_detected': 'Movimiento detectado',
         'waiting_ir_command': 'Esperando el comando IR...',
         'point_remote_and_press': 'Apunte el control remoto hacia la estación base y presione un botón',
         'step_of': 'Paso',
@@ -765,7 +780,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'Kein Verlauf',
         'clear_history': 'Verlauf löschen',
         'restart_required': 'Bitte starten Sie die Anwendung neu, um MQTT-Änderungen anzuwenden',
-        'user_mode': 'Benutzermodus',
+        'user_mode': 'Modusauswahl',
         'mode_developer': 'Entwickler',
         'mode_technician': 'Techniker',
         'mode_user': 'Benutzer',
@@ -880,6 +895,7 @@ class AppSettings extends ChangeNotifier {
         'action_sent_success': 'Aktion gesendet!',
         'command_sent': 'Befehl gesendet',
         'command_failed': 'Fehlgeschlagen',
+        'movement_detected': 'Bewegung erkannt',
         'waiting_ir_command': 'Warte auf IR-Befehl...',
         'point_remote_and_press': 'Richten Sie die Fernbedienung auf die Basisstation und drücken Sie eine Taste',
         'step_of': 'Schritt',
@@ -950,7 +966,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'Pas d\'historique',
         'clear_history': 'Effacer l\'historique',
         'restart_required': 'Veuillez redémarrer l\'application pour appliquer les changements MQTT',
-        'user_mode': 'Mode utilisateur',
+        'user_mode': 'Choix Mode',
         'mode_developer': 'Développeur',
         'mode_technician': 'Technicien',
         'mode_user': 'Utilisateur',
@@ -1065,6 +1081,7 @@ class AppSettings extends ChangeNotifier {
         'action_sent_success': 'Action envoyée !',
         'command_sent': 'Commande envoyée',
         'command_failed': 'Échec',
+        'movement_detected': 'Mouvement détecté',
         'waiting_ir_command': 'En attente de la commande infrarouge...',
         'point_remote_and_press': 'Pointez la télécommande vers la basestation et appuyez sur un bouton',
         'step_of': 'Étape',
