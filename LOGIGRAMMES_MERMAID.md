@@ -1,15 +1,15 @@
-# Logigrammes WaveControl (Mermaid)
+# WaveControl Flowcharts (Mermaid)
 
-Ce document regroupe tous les logigrammes du projet en syntaxe Mermaid `flowchart`, pour une utilisation directe dans les outils compatibles Mermaid.
+This document groups all project flowcharts using Mermaid `flowchart` syntax, for direct use in Mermaid-compatible tools.
 
-Pour améliorer la lisibilité visuelle, chaque logigramme utilise :
-- un espacement augmenté entre les nœuds,
-- une palette cohérente (début/fin, action, décision, résultat),
-- une structuration des branches qui évite les libellés collés.
+To improve visual readability, each flowchart uses:
+- increased spacing between nodes,
+- a consistent palette (start/end, action, decision, result),
+- branch structuring that avoids overlapping labels.
 
 ---
 
-## 0) Navigation haut niveau de l'application
+## 0) High-level app navigation
 
 ```mermaid
 ---
@@ -27,14 +27,14 @@ config:
   layout: fixed
 ---
 flowchart TB
-    C["HomeScreen"] --> E["SettingsScreen"] & G["ViewConfigsScreen"] & F["Monitoring appareils"] & I["MqttControlPage"] & H["ConfigurationScreen"]
-    H --> K["Config Mouvements / Gestion télécommandes IR"] & C
+  C["HomeScreen"] --> E["SettingsScreen"] & G["ViewConfigsScreen"] & F["Device monitoring"] & I["MqttControlPage"] & H["ConfigurationScreen"]
+  H --> K["Motion config / IR remote management"] & C
     K --> L["IRDeviceDetailScreen"]
     E --> C
     F --> C
     G --> C
     I --> C
-    A(["Lancement app"]) --> C
+    A(["App launch"]) --> C
 
      C:::action
      E:::action
@@ -53,39 +53,39 @@ flowchart TB
 ---
 
 
-## 1) Navigation globale et lancement
+## 1) Global navigation and startup
 
 ```mermaid
 graph TD
-    %% Nœud de départ
-    Start([Lancement Application WaveControl]) --> Home[Home - Hub principale]
+  %% Start node
+  Start([Launch WaveControl app]) --> Home[Home - Main hub]
 
-    %% Navigation supérieure
-    Home --> ModeSel[Mode sélectionné]
-    Home --> Params[Paramètres]
+  %% Top navigation
+  Home --> ModeSel[Selected mode]
+  Home --> Params[Settings]
 
-    %% Logique de sélection
-    Params --> Choice{Sélection Mode}
+  %% Selection logic
+  Params --> Choice{Mode selection}
 
-    %% Branches des modes
-    Choice --> User[Mode utilisateur]
-    Choice --> Tech[Mode Technicien]
-    Choice --> Dev[Mode Developpeur]
+  %% Mode branches
+  Choice --> User[User mode]
+  Choice --> Tech[Technician mode]
+  Choice --> Dev[Developer mode]
 
-    %% Actions Mode Utilisateur
-    User --> ViewConfig[Voir configuration]
+  %% User mode actions
+  User --> ViewConfig[View configuration]
     User --> Monitor[Monitoring]
 
-    %% Actions Mode Technicien
+  %% Technician mode actions
     Tech --> Monitor
-    Tech --> Config[Configuration]
+  Tech --> Config[Setup]
 
-    %% Actions Mode Développeur
+  %% Developer mode actions
     Dev --> Config
     Dev --> Test[TEST MQTT]
     Dev --> Monitor
 
-    %% Style (Optionnel pour correspondre à l'image)
+  %% Style (Optional to match the image)
     style Choice fill:#fff,stroke:#333,stroke-width:2px
     style Start fill:#fff,stroke:#333,stroke-width:1px
     style Home fill:#fff,stroke:#333,stroke-width:1px
@@ -93,7 +93,7 @@ graph TD
 
 ---
 
-## 2) Commande MQTT complète
+## 2) Full MQTT command flow
 
 ```mermaid
 ---
@@ -111,14 +111,14 @@ config:
   layout: dagre
 ---
 flowchart TB
-    A["Action utilisateur"] --> B["UI déclenche commande"]
-    B --> C["Service MQTT envoyé"]
+  A["User action"] --> B["UI triggers command"]
+  B --> C["MQTT service sends"]
     C --> D["Broker MQTT"]
-    D --> E["Équipement exécute"] & G["Application reçoit retour"]
-    E --> F["Équipement publie nouvel état"]
+  D --> E["Device executes"] & G["App receives feedback"]
+  E --> F["Device publishes new state"]
     F --> D
-    G --> H["Mise à jour état local"]
-    H --> I["UI rafraîchie"]
+  G --> H["Update local state"]
+  H --> I["UI refreshed"]
 
      A:::start
      B:::action
@@ -136,24 +136,24 @@ flowchart TB
 
 ---
 
-## 3) Reconnexion réseau
+## 3) Network reconnection
 
 ```mermaid
 %%{init: {'theme':'base','flowchart':{'nodeSpacing':42,'rankSpacing':58,'curve':'linear'},'themeVariables':{'fontSize':'13px','lineColor':'#334155','primaryTextColor':'#0f172a','fontFamily':'Inter,Segoe UI,Arial'}}}%%
 flowchart TD
-    A[Application connectée] --> B{Réseau disponible ?}
-    B -->|Oui| C[Fonctionnement nominal]
-    B -->|Non| D[Perte réseau détectée]
-    D --> E[Statut MQTT déconnecté]
-    E --> F[Surveillance connectivité]
-    F --> G{Réseau revenu ?}
-    G -->|Non| F
-    G -->|Oui| H[Tentative reconnexion MQTT]
-    H --> I{Succès ?}
-    I -->|Oui| J[Réabonnement topics]
-    J --> K[Resynchronisation états]
+  A[App connected] --> B{Network available?}
+  B -->|Yes| C[Nominal operation]
+  B -->|No| D[Network loss detected]
+  D --> E[MQTT disconnected status]
+  E --> F[Connectivity monitoring]
+  F --> G{Network restored?}
+  G -->|No| F
+  G -->|Yes| H[MQTT reconnection attempt]
+  H --> I{Success?}
+  I -->|Yes| J[Resubscribe to topics]
+  J --> K[State resynchronization]
     K --> C
-    I -->|Non| L[Retry temporisé]
+  I -->|No| L[Timed retry]
     L --> H
 
     classDef start fill:#0ea5e9,stroke:#0369a1,color:#ffffff,stroke-width:2px;
@@ -172,7 +172,7 @@ flowchart TD
 
 
 
-## 5) Workflow configuration bracelet
+## 5) Wristband configuration workflow
 
 ```mermaid
 ---
@@ -190,21 +190,21 @@ config:
   layout: fixed
 ---
 flowchart TB
-    A["Entrée écran Configuration"] --> B["Demande possibilités bracelet"]
-    B --> C["Réception possibilités"]
-    C --> D["Chargement config existante"]
-    D --> E{"Configuration existante ?"}
-    E -- Oui --> F["Afficher"]
-    E -- Non --> G["Assistant de création"]
-    G --> H["Ajout association mouvement"]
-    H --> I["Validation utilisateur"]
-    I --> J["Envoi via MQTT"]
-    J --> K{"Statut succès ?"}
-    K -- Oui --> L["Confirmation + rechargement"]
-    K -- Non --> M["Erreur"]
-    F --> n1["Choix Bouton"]
-    n1 -- Ajout Config --> H
-    n1 -- Infrarouge --> n2["Gestion Infra-Rouge"]
+  A["Enter Configuration screen"] --> B["Request wristband capabilities"]
+  B --> C["Receive capabilities"]
+  C --> D["Load existing config"]
+  D --> E{"Existing configuration?"}
+  E -- Yes --> F["Display"]
+  E -- No --> G["Creation wizard"]
+  G --> H["Add motion mapping"]
+  H --> I["User validation"]
+  I --> J["Send via MQTT"]
+  J --> K{"Success status?"}
+  K -- Yes --> L["Confirmation + reload"]
+  K -- No --> M["Error"]
+  F --> n1["Button choice"]
+  n1 -- Add Config --> H
+  n1 -- Infrared --> n2["Infrared management"]
 
     n1@{ shape: diam}
     n2@{ shape: rect}
@@ -233,54 +233,7 @@ flowchart TB
 ---
 
 
-
-## 6) Gestion des périphériques IR
-
-```mermaid
----
-config:
-  theme: base
-  flowchart:
-    nodeSpacing: 42
-    rankSpacing: 58
-    curve: linear
-  themeVariables:
-    fontSize: 13px
-    lineColor: '#334155'
-    primaryTextColor: '#0f172a'
-    fontFamily: Inter,Segoe UI,Arial
-  layout: fixed
----
-flowchart TB
-    A["Ouverture module IR"] --> B["Demande liste télécommandes"]
-    B --> C["Affichage liste"]
-    C --> D{"Action utilisateur"}
-    D -- Ajouter --> E["Création télécommande"]
-    D -- Supprimer --> G["Confirmation suppression"]
-    F["Détail périphérique"] --> H["Rafraîchissement liste"]
-    H --> I["État IR synchronisé"]
-    G --> H
-    E --> H
-    D -- Consulter --> F
-
-     A:::start
-     B:::action
-     C:::action
-     D:::decision
-     E:::action
-     G:::action
-     F:::action
-     H:::action
-     I:::result
-    classDef start fill:#0ea5e9,stroke:#0369a1,color:#ffffff,stroke-width:2px
-    classDef action fill:#e2e8f0,stroke:#64748b,color:#0f172a,stroke-width:1.5px
-    classDef decision fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:2px
-    classDef result fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px
-```
-
----
-
-## 7) Traitement d'un message entrant
+## 6) Incoming message processing
 
 ```mermaid
 ---
@@ -298,14 +251,14 @@ config:
   layout: fixed
 ---
 flowchart TB
-    A["Message MQTT entrant"] --> B["Identifier topic"]
-    B --> C["Parser payload"]
-    C --> D{"Payload valide ?"}
-    D -- Oui --> E["Mettre à jour état local"]
-    D -- Non --> F["Journaliser erreur"]
-    E --> G["Notifier écrans"]
+  A["Incoming MQTT message"] --> B["Identify topic"]
+  B --> C["Parse payload"]
+  C --> D{"Valid payload?"}
+  D -- Yes --> E["Update local state"]
+  D -- No --> F["Log error"]
+  E --> G["Notify screens"]
     F --> G
-    G --> H["Interface actualisée"]
+  G --> H["UI refreshed"]
 
      A:::start
      B:::action
@@ -324,7 +277,7 @@ flowchart TB
 
 ---
 
-## 8) Workflow ajout d'action dans une télécommande IR
+## 7) Workflow for adding an action to an IR remote
 
 ```mermaid
 ---
@@ -344,22 +297,22 @@ config:
   layout: fixed
 ---
 flowchart TB
-    A["Ouvrir détail de la télécommande"] --> B["Cliquer Ajouter action"]
-    B --> C["Saisir nom de l'action"]
-    C --> D{"Nom valide ?"}
-    D -- Non --> E["Afficher erreur de saisie"]
+  A["Open remote details"] --> B["Click Add action"]
+  B --> C["Enter action name"]
+  C --> D{"Valid name?"}
+  D -- No --> E["Show input error"]
     E --> C
-    D -- Oui --> F["Passer en mode apprentissage IR"]
-    F --> G["Demander appui sur bouton physique"]
-    G --> H{"Signal IR reçu ?"}
-    H -- Non --> I["Timeout / nouvelle tentative"]
+  D -- Yes --> F["Switch to IR learning mode"]
+  F --> G["Request physical button press"]
+  G --> H{"IR signal received?"}
+  H -- No --> I["Timeout / retry"]
     I --> G
-    H -- Oui --> J["Enregistrer code IR"]
-    J --> K["Publier mise à jour MQTT"]
-    K --> L{"Retour de confirmation ?"}
-    L -- Non --> M["Alerte échec + conserver brouillon"]
-    L -- Oui --> N["Rafraîchir liste des actions"]
-    N --> O["Action visible dans la télécommande"]
+  H -- Yes --> J["Save IR code"]
+  J --> K["Publish MQTT update"]
+  K --> L{"Confirmation feedback?"}
+  L -- No --> M["Failure alert + keep draft"]
+  L -- Yes --> N["Refresh actions list"]
+  N --> O["Action visible on the remote"]
 
      A:::start
      B:::action
@@ -383,86 +336,8 @@ flowchart TB
     classDef warning fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.8px
 ```
 
----
-## 9) Workflow menu Paramètres
-
-```mermaid
----
-config:
-  theme: base
-  flowchart:
-    nodeSpacing: 42
-    rankSpacing: 58
-    curve: linear
-  themeVariables:
-    fontSize: 13px
-    lineColor: '#334155'
-    primaryTextColor: '#0f172a'
-    fontFamily: Inter,Segoe UI,Arial
-  layout: fixed
----
-flowchart TB
-    A["Ouvrir Settings depuis Home"] --> B["Afficher menu Paramètres"]
-    B --> C{"Choix utilisateur"}
-    C -- Langue --> D["Changer langue"]
-    C -- Thème --> E["Basculer clair/sombre"]
-    C -- MQTT --> F["Modifier serveur/port/login/mdp"]
-    C -- Mode --> G["Demander changement de mode"]
-    C -- Notifications --> H@{ label: "Activer/désactiver types d'alertes" }
-    D --> J["Enregistrer préférence locale"]
-    E --> J
-    H --> J
-    F --> K{"Mot de passe MQTT saisi ?"}
-    K -- Non --> L["Erreur : mot de passe requis"]
-    L --> F
-    K -- Oui --> M["Sauvegarder config MQTT"]
-    M --> N["Informer : redémarrage conseillé"]
-    G --> O{"Mode avancé ?"}
-    O -- Non --> P["Appliquer mode immédiatement"]
-    O -- Oui --> Q["Saisir mot de passe du mode"]
-    Q --> R{"Mot de passe valide ?"}
-    R -- Non --> S["Refus + message erreur"]
-    S --> G
-    R -- Oui --> T["Appliquer nouveau mode"]
-    I["Afficher infos application"] --> U["Retour au menu"]
-    N --> U
-    P --> U
-    T --> U
-    J --> U
-    U --> V@{ label: "Paramètres actifs dans l'application" }
-    C -- À propos --> I
-
-    H@{ shape: rect}
-    V@{ shape: rect}
-     A:::start
-     B:::action
-     C:::decision
-     D:::action
-     E:::action
-     F:::action
-     G:::action
-     H:::action
-     J:::action
-     K:::decision
-     L:::warning
-     M:::action
-     N:::action
-     O:::decision
-     P:::action
-     Q:::action
-     R:::decision
-     S:::warning
-     T:::action
-     I:::action
-     U:::action
-     V:::result
-    classDef start fill:#0ea5e9,stroke:#0369a1,color:#ffffff,stroke-width:2px
-    classDef action fill:#e2e8f0,stroke:#64748b,color:#0f172a,stroke-width:1.5px
-    classDef decision fill:#fef3c7,stroke:#d97706,color:#78350f,stroke-width:2px
-    classDef result fill:#dcfce7,stroke:#16a34a,color:#14532d,stroke-width:2px
-    classDef warning fill:#fee2e2,stroke:#dc2626,color:#7f1d1d,stroke-width:1.8px      
 ```
-## 10) Workflow Monitoring
+## 10) Monitoring workflow
 
 ```mermaid
 ---
@@ -480,22 +355,22 @@ config:
   layout: fixed
 ---
 flowchart TB
-    A["Ouvrir Monitoring depuis Home"] --> B["Charger états appareils"]
-    B --> C{"Données disponibles ?"}
-    C -- Non --> D["Afficher état vide / non connecté"]
-    C -- Oui --> F["Afficher grille des appareils"]
-    F --> G{"Action utilisateur ?"}
-    G -- Aucune --> H["Mise à jour passive en temps réel"]
+  A["Open Monitoring from Home"] --> B["Load device states"]
+  B --> C{"Data available?"}
+  C -- No --> D["Show empty / disconnected state"]
+  C -- Yes --> F["Show device grid"]
+  F --> G{"User action?"}
+  G -- None --> H["Passive real-time updates"]
     H --> F
-    G -- ON/OFF --> I["Envoyer commande MQTT"]
-    G -- Couleur/Luminosité --> J["Ouvrir contrôle lampe"]
+    G -- ON/OFF --> I["Send MQTT command"]
+  G -- Color/Brightness --> J["Open lamp control"]
     J --> I
-    I --> K{"Retour MQTT reçu ?"}
-    K -- Non --> L["Afficher délai / réessayer"]
+  I --> K{"MQTT feedback received?"}
+  K -- No --> L["Show delay / retry"]
     L --> I
-    K -- Oui --> M["Mettre à jour état local"]
-    M --> N["Rafraîchir carte appareil"]
-    N --> O["Statut visible et cohérent"]
+  K -- Yes --> M["Update local state"]
+  M --> N["Refresh device card"]
+  N --> O["Status visible and consistent"]
     D --> B
 
      A:::start
@@ -521,7 +396,7 @@ flowchart TB
 
 ---
 
-## 11) Workflow TEST.MQTT
+## 11) TEST.MQTT workflow
 
 ```mermaid
 ---
@@ -539,34 +414,34 @@ config:
   layout: fixed
 ---
 flowchart TB
-    A["Ouvrir TEST.MQTT depuis Home"] --> B["Initialiser page de diagnostic"]
-    B --> C{"MQTT connecté ?"}
+  A["Open TEST.MQTT from Home"] --> B["Initialize diagnostics page"]
+  B --> C{"MQTT connected?"}
 
-    C -- Non --> D["Afficher statut déconnecté"]
-    D --> E["Action: Reconnecter"]
-    E --> F["Tentative de connexion MQTT"]
+  C -- No --> D["Show disconnected status"]
+  D --> E["Action: Reconnect"]
+  E --> F["MQTT connection attempt"]
     F --> C
 
-    C -- Oui --> G["Afficher contrôles MQTT"]
-    G --> H{"Type d'action"}
+  C -- Yes --> G["Show MQTT controls"]
+  G --> H{"Action type"}
 
-    H -- Publier message --> I["Saisir topic + payload"]
-    I --> J["Envoyer publication"]
-    J --> K{"Envoi réussi ?"}
-    K -- Non --> L["Toast erreur / garder saisie"]
+  H -- Publish message --> I["Enter topic + payload"]
+  I --> J["Send publish"]
+  J --> K{"Send successful?"}
+  K -- No --> L["Error toast / keep input"]
     L --> I
-    K -- Oui --> M["Toast succès"]
+  K -- Yes --> M["Success toast"]
 
-    H -- Lire activité --> N["Afficher historique messages"]
-    N --> O{"Nouveaux messages ?"}
-    O -- Oui --> P["Actualiser liste en direct"]
+  H -- Read activity --> N["Show message history"]
+  N --> O{"New messages?"}
+  O -- Yes --> P["Refresh live list"]
     P --> N
-    O -- Non --> N
+  O -- No --> N
 
-    H -- Commandes rapides --> Q["Envoyer commande prédéfinie"]
+  H -- Quick commands --> Q["Send predefined command"]
     Q --> K
 
-    M --> R["État et historique cohérents"]
+  M --> R["State and history consistent"]
     N --> R
 
      A:::start
