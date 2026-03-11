@@ -31,6 +31,10 @@ class AppSettings extends ChangeNotifier {
   bool _enableErrorNotifications = true;
   bool _enableLearningNotifications = true;
 
+  // Nombre de configurations bracelet sauvegardées
+  int _wristbandConfigsCount = 0;
+  int get wristbandConfigsCount => _wristbandConfigsCount;
+
   ThemeMode get themeMode => _themeMode;
   String get language => _language;
   bool get isDarkMode => _themeMode == ThemeMode.dark;
@@ -65,6 +69,7 @@ class AppSettings extends ChangeNotifier {
     _enableSuccessNotifications = prefs.getBool('enableSuccessNotifications') ?? true;
     _enableErrorNotifications = prefs.getBool('enableErrorNotifications') ?? true;
     _enableLearningNotifications = prefs.getBool('enableLearningNotifications') ?? true;
+    _wristbandConfigsCount = prefs.getInt('wristbandConfigsCount') ?? 0;
     notifyListeners();
   }
 
@@ -159,6 +164,13 @@ class AppSettings extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateWristbandConfigsCount(int count) async {
+    _wristbandConfigsCount = count;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('wristbandConfigsCount', count);
+    notifyListeners();
+  }
+
   // Textes traduits
   Map<String, String> get texts {
     if (_language == 'en') {
@@ -209,7 +221,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'No history',
         'clear_history': 'Clear history',
         'restart_required': 'Please restart the application to apply MQTT changes',
-        'user_mode': 'User Mode',
+        'user_mode': 'Mode Selection',
         'mode_developer': 'Developer',
         'mode_technician': 'Technician',
         'mode_user': 'User',
@@ -396,7 +408,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': '无历史记录',
         'clear_history': '清除历史记录',
         'restart_required': '请重新启动应用程序以应用MQTT更改',
-        'user_mode': '用户模式',
+        'user_mode': '模式选择',
         'mode_developer': '开发者',
         'mode_technician': '技术人员',
         'mode_user': '用户',
@@ -582,7 +594,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'Sin historial',
         'clear_history': 'Borrar historial',
         'restart_required': 'Por favor, reinicie la aplicación para aplicar los cambios de MQTT',
-        'user_mode': 'Modo de usuario',
+        'user_mode': 'Seleccion de modo',
         'mode_developer': 'Desarrollador',
         'mode_technician': 'Técnico',
         'mode_user': 'Usuario',
@@ -768,7 +780,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'Kein Verlauf',
         'clear_history': 'Verlauf löschen',
         'restart_required': 'Bitte starten Sie die Anwendung neu, um MQTT-Änderungen anzuwenden',
-        'user_mode': 'Benutzermodus',
+        'user_mode': 'Modusauswahl',
         'mode_developer': 'Entwickler',
         'mode_technician': 'Techniker',
         'mode_user': 'Benutzer',
@@ -954,7 +966,7 @@ class AppSettings extends ChangeNotifier {
         'no_history': 'Pas d\'historique',
         'clear_history': 'Effacer l\'historique',
         'restart_required': 'Veuillez redémarrer l\'application pour appliquer les changements MQTT',
-        'user_mode': 'Mode utilisateur',
+        'user_mode': 'Choix Mode',
         'mode_developer': 'Développeur',
         'mode_technician': 'Technicien',
         'mode_user': 'Utilisateur',

@@ -488,18 +488,29 @@ class _MqttControlPageState extends State<MqttControlPage> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      TextButton(
-                        onPressed: () => _mqtt.clearHistory(),
-                        child: Text(_settings.text('clear_history')),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () => _mqtt.clearHistory(),
+                          child: Text(
+                            _settings.text('clear_history'),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
                       ),
-                      const Spacer(),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _isHistoryOpen = false;
-                          });
-                        },
-                        child: Text(_settings.text('close_history')),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _isHistoryOpen = false;
+                            });
+                          },
+                          child: Text(
+                            _settings.text('close_history'),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
                       ),
                     ],
                   ),
